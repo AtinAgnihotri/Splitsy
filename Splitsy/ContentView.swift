@@ -9,85 +9,57 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var tapCount = 0
-    @State private var name = ""
-    let students = ["Harry", "Hermione", "Ron"]
-    @State private var selectedStudent = 0
+//    @State private var totalAmount: Double = 0
+    @State private var totalAmountText: String = ""
+    @State private var count: Int = 0
+    @State private var tipCount: Int = 0
+    @State private var split: Double = 0
+    let tipAmount = [0, 5, 10, 15, 20, 25]
     /*
      some View. This means it will return something that conforms to the View protocol, but that extra some keyword adds an important restriction: it must always be the same kind of view being returned – you can’t sometimes return one type of thing and other times return a different type of thing.
      */
     var body: some View {
         NavigationView {
-//            Section {
-//                Picker("Select your student", selection: $selectedStudent) {
-//                    ForEach(0 ..< students.count) {
-//                        Text(self.students[$0]).tag($0)
-//                    }
-//                }
-//            }
-            // SwiftUI entertains upto 10 children per view
             Form {
-                
                 Section {
-                    Text(name=="" ? "Hello!" : "Hello \(name)!")
-                        .padding()
-                    // $var for two way binding
-                    TextField("Enter your name", text: $name)
-                    Button("Tap Count \(tapCount)") {
-                        self.tapCount += 1
-                    }
-//                    ForEach(1..<100) {
-//                        Text("Row \($0)")
-//                            .padding()
-//                    }
-                    Picker("Select your student", selection: $selectedStudent) {
-                        ForEach(0 ..< students.count) {
-                            Text(self.students[$0]).tag($0)
+                    TextField("Enter total amount", text: $totalAmountText)
+                        .keyboardType(.decimalPad)
+                    Picker("Number of People", selection: $count) {
+                        ForEach(2..<100) {
+                            Text("\($0) people")
                         }
                     }
-                    
-                    Text("You chose: Student # \(students[selectedStudent])")
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
-//                    Text("Hello, world!")
-//                        .padding()
                 }
-                
-                
-//                Section {
-//                Text("Hello, world!")
-//                    .padding()
-//                Text("Hello, world!")
-//                    .padding()
-//                Text("Hello, world!")
-//                    .padding()
-//
-//                }
+                Section {
+                    Picker ("Select Tip Amount", selection: $tipCount){
+                        ForEach (0 ..< tipAmount.count) {
+                            Text("\(tipAmount[$0])%")
+                        }
+                    }.pickerStyle(SegmentedPickerStyle())
+                }
+                Section {
+                    Button("Split!") {
+                        calcuateSplit()
+                    }
+                }
+                Section {
+                    Text(String(format: "Your split is %.2f", split))
+                }
             }
-            
-            
-//            .navigationBarTitle(Text("SwiftUI"), displayMode: .inline)
-            // Modifiers are regular methods with one small difference: they always return a new instance of whatever you use them on.
             .navigationBarTitle("Splitsy")
-            
-            
-            
         }
         
+    }
+    
+    func calcuateSplit() {
+        guard let totalAmount = Double(totalAmountText) else {
+            totalAmountText = ""
+            split = 0
+            return
+        }
+        let totalTippedAmount = totalAmount * ( 1 + (Double(tipAmount[tipCount]) / 100.0))
+        split = totalTippedAmount / Double(count + 2)
+        print("totalTippedAmount: \(totalTippedAmount), split: \(split)")
         
     }
 }
