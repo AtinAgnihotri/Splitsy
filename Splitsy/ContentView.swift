@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct ContentView: View {
     
     @State private var totalAmountText: String = ""
@@ -39,7 +41,8 @@ struct ContentView: View {
                 // Total Amount and Number of People
                 Section {
                     TextField("Amount", text: $totalAmountText)
-                        .keyboardType(.decimalPad)
+                    .keyboardType(.decimalPad)
+                    
                     Picker("Number of People", selection: $count) {
                         ForEach(2..<100) {
                             Text("\($0) people")
@@ -57,38 +60,25 @@ struct ContentView: View {
                         }
                     }.pickerStyle(SegmentedPickerStyle())
                 }
-                
+
                 // Total Amount
                 AmountView(headerText: "Total amount after tip", amount: totalAmountAfterTip)
-                
+                .onTapGesture {
+                    hideKeyboard()
+                }
+
                 // Split Amount
                 AmountView(headerText: "Amount per person", amount: split)
-
+                .onTapGesture {
+                    hideKeyboard()
+                }
             }
             .navigationBarTitle("Splitsy")
         }
-        
     }
     
 }
 
-// A custom view to display amount in Forms
-struct AmountView: View {
-    var headerText: String
-    var amount: Double
-    
-    init(headerText: String, amount: Double) {
-        self.headerText = headerText
-        self.amount = amount
-    }
-    
-    var body: some View {
-        Section (header: Text(headerText)
-                            .textCase(nil)){
-            Text("\(amount, specifier: "%.2f")")
-        }
-    }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
