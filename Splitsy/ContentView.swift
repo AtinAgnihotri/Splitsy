@@ -66,6 +66,7 @@ struct ContentView: View {
                 .onTapGesture {
                     hideKeyboard()
                 }
+                    .foregroundColor(tipAmount[tipCount] == 0 ? .red : .primary)
 
                 // Split Amount
                 AmountView(headerText: "Amount per person", amount: split)
